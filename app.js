@@ -74,8 +74,15 @@ class CollectiveCanvas {
     }
 
     resizeCanvas() {
+        // Resize canvas (this clears the canvas automatically)
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+        
+        // Always redraw the artistic background after resize
+        this.createArtisticBackground();
+        
+        // Note: Any existing artwork will be lost during resize
+        // This is acceptable for this type of collaborative art experience
     }
 
     setupView() {

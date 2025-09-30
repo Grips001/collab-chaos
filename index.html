@@ -4,7 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collective Canvas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --accent-primary: #6366f1;
+            --accent-hover: #5855eb;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,10 +30,13 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: #000;
-            color: #fff;
+            color: var(--text-primary);
             overflow: hidden;
+            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         #canvas {
@@ -36,172 +57,425 @@
             pointer-events: auto;
         }
 
+        /* Host Controls - Glassmorphism */
         .host-controls {
-            top: 20px;
-            left: 20px;
-            background: rgba(0,0,0,0.8);
-            padding: 15px;
-            border-radius: 10px;
+            top: 24px;
+            left: 24px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 20px 24px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 320px;
+        }
+
+        .host-controls:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .control-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            color: var(--text-secondary);
+            margin-right: 12px;
+            min-width: 80px;
+        }
+
+        .control-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .control-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Modern Button Design */
+        .btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(10px);
         }
 
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        /* Join Banner - Floating Glass Card */
         .join-banner {
-            bottom: 30px;
+            bottom: 32px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
-            background: rgba(255,255,255,0.95);
-            color: #000;
-            padding: 20px 30px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 24px 32px;
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 90vw;
+        }
+
+        .join-banner:hover {
+            transform: translateX(-50%) translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.4);
         }
 
         .join-url {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .join-subtitle {
             font-size: 14px;
-            opacity: 0.7;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
 
-        button {
-            background: #fff;
-            color: #000;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin: 0 5px;
-            font-size: 12px;
-        }
-
-        button:hover {
-            background: #f0f0f0;
-        }
-
+        /* Participant View - Immersive Background */
         .participant-view {
             display: none;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
             padding: 20px;
+            position: relative;
+            overflow: hidden;
         }
 
+        .participant-view::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="0.5" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="0.3" fill="white" opacity="0.05"/><circle cx="50" cy="10" r="0.4" fill="white" opacity="0.08"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            pointer-events: none;
+        }
+
+        /* Contribution Form - Floating Glass Card */
         .contribution-form {
-            background: rgba(255,255,255,0.95);
-            color: #333;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
             padding: 40px;
-            border-radius: 20px;
+            border-radius: 32px;
             text-align: center;
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 2;
         }
 
+        .contribution-form:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-subtitle {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        /* Color Palette - Modern Grid */
         .color-palette {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
-            margin: 20px 0;
+            gap: 8px;
+            margin: 32px 0;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-items: center;
+            align-items: center;
         }
 
         .color-swatch {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            border: 3px solid transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            justify-self: center;
+            align-self: center;
+        }
+
+        .color-swatch:hover {
+            transform: scale(1.05) translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            z-index: 2;
         }
 
         .color-swatch.selected {
-            border-color: #333;
-            transform: scale(1.1);
+            border-color: white;
+            transform: scale(1.1) translateY(-2px);
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(255, 255, 255, 0.3);
+            z-index: 3;
         }
 
+        .color-swatch.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Word Input - Modern Design */
         .word-input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 16px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
             font-size: 18px;
             text-align: center;
-            margin: 20px 0;
+            margin: 24px 0;
             outline: none;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+        .word-input::placeholder {
+            color: var(--text-muted);
+            font-weight: 400;
         }
 
         .word-input:focus {
-            border-color: #667eea;
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
 
+        /* Submit Button - Premium Design */
         .submit-btn {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-hover));
             color: white;
-            padding: 15px 30px;
+            padding: 16px 32px;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
         .submit-btn:hover:not(:disabled) {
-            background: #5a67d8;
             transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-btn:hover:not(:disabled)::before {
+            left: 100%;
         }
 
         .submit-btn:disabled {
-            background: #ccc;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
+        /* Status Messages - Modern Alerts */
         .status-message {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: bold;
+            margin-top: 24px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
+            border: 1px solid;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .status-success {
-            background: #d4edda;
-            color: #155724;
+            background: rgba(16, 185, 129, 0.15);
+            color: #6ee7b7;
+            border-color: rgba(16, 185, 129, 0.3);
         }
 
         .status-error {
-            background: #f8d7da;
-            color: #721c24;
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            border-color: rgba(239, 68, 68, 0.3);
         }
 
         .cooldown {
-            background: #fff3cd;
-            color: #856404;
+            background: rgba(245, 158, 11, 0.15);
+            color: #fcd34d;
+            border-color: rgba(245, 158, 11, 0.3);
         }
 
+        /* Responsive Design */
         @media (max-width: 768px) {
             .join-banner {
-                bottom: 20px;
+                bottom: 24px;
                 left: 20px;
                 right: 20px;
                 transform: none;
+                padding: 20px 24px;
             }
             
             .join-url {
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .host-controls {
-                top: 10px;
-                left: 10px;
-                right: 10px;
-                padding: 10px;
+                top: 16px;
+                left: 16px;
+                right: 16px;
+                padding: 16px 20px;
             }
+
+            .contribution-form {
+                margin: 20px;
+                padding: 32px 24px;
+                border-radius: 24px;
+            }
+
+            .color-palette {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+                padding: 12px;
+            }
+
+            .color-swatch {
+                width: 36px;
+                height: 36px;
+            }
+
+            .form-title {
+                font-size: 24px;
+            }
+        }
+
+        /* Smooth Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contribution-form {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .host-controls {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+        }
+
+        .join-banner {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
         }
     </style>
 </head>
@@ -211,17 +485,19 @@
         <canvas id="canvas"></canvas>
         
         <div class="overlay host-controls">
-            <div style="margin-bottom: 10px;">
-                <strong>Canvas ID:</strong> <span id="canvas-id">Loading...</span>
+            <div class="control-row">
+                <span class="control-label">Canvas ID</span>
+                <span class="control-value" id="canvas-id">Loading...</span>
             </div>
-            <div style="margin-bottom: 15px;">
-                <strong>Submissions:</strong> <span id="submission-count">0</span>
+            <div class="control-row">
+                <span class="control-label">Submissions</span>
+                <span class="control-value" id="submission-count">0</span>
             </div>
-            <div>
-                <button onclick="togglePause()">Pause</button>
-                <button onclick="softClear()">Soft Clear</button>
-                <button onclick="hardReset()">Hard Reset</button>
-                <button onclick="saveCanvas()">Save Image</button>
+            <div class="control-buttons">
+                <button class="btn" onclick="togglePause()">Pause</button>
+                <button class="btn" onclick="softClear()">Soft Clear</button>
+                <button class="btn" onclick="hardReset()">Hard Reset</button>
+                <button class="btn btn-primary" onclick="saveCanvas()">Save Image</button>
             </div>
         </div>
 
@@ -234,8 +510,8 @@
     <!-- Participant View -->
     <div id="participant-view" class="participant-view">
         <div class="contribution-form">
-            <h2 style="margin-bottom: 20px;">Add Your Mark</h2>
-            <p style="margin-bottom: 20px; opacity: 0.8;">Choose a color that feels like you. Add one word—any word.</p>
+            <h2 class="form-title">Add Your Mark</h2>
+            <p class="form-subtitle">Choose a color that feels like you. Add one word—any word.</p>
             
             <div class="color-palette" id="color-palette"></div>
             
