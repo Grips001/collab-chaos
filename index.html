@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collective Canvas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        #canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #000;
+            z-index: 1;
+        }
+
+        .overlay {
+            position: fixed;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .overlay * {
+            pointer-events: auto;
+        }
+
+        .host-controls {
+            top: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .join-banner {
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            background: rgba(255,255,255,0.95);
+            color: #000;
+            padding: 20px 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .join-url {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .join-subtitle {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+
+        button {
+            background: #fff;
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 12px;
+        }
+
+        button:hover {
+            background: #f0f0f0;
+        }
+
+        .participant-view {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .contribution-form {
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .color-swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .color-swatch.selected {
+            border-color: #333;
+            transform: scale(1.1);
+        }
+
+        .word-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            text-align: center;
+            margin: 20px 0;
+            outline: none;
+        }
+
+        .word-input:focus {
+            border-color: #667eea;
+        }
+
+        .submit-btn {
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .cooldown {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .join-banner {
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                transform: none;
+            }
+            
+            .join-url {
+                font-size: 18px;
+            }
+            
+            .host-controls {
+                top: 10px;
+                left: 10px;
+                right: 10px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Host Canvas View -->
+    <div id="host-view">
+        <canvas id="canvas"></canvas>
+        
+        <div class="overlay host-controls">
+            <div style="margin-bottom: 10px;">
+                <strong>Canvas ID:</strong> <span id="canvas-id">Loading...</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <strong>Submissions:</strong> <span id="submission-count">0</span>
+            </div>
+            <div>
+                <button onclick="togglePause()">Pause</button>
+                <button onclick="softClear()">Soft Clear</button>
+                <button onclick="hardReset()">Hard Reset</button>
+                <button onclick="saveCanvas()">Save Image</button>
+            </div>
+        </div>
+
+        <div class="overlay join-banner" id="join-banner">
+            <div class="join-url" id="join-url">Loading...</div>
+            <div class="join-subtitle">Pick a color • Add one word • Create together</div>
+        </div>
+    </div>
+
+    <!-- Participant View -->
+    <div id="participant-view" class="participant-view">
+        <div class="contribution-form">
+            <h2 style="margin-bottom: 20px;">Add Your Mark</h2>
+            <p style="margin-bottom: 20px; opacity: 0.8;">Choose a color that feels like you. Add one word—any word.</p>
+            
+            <div class="color-palette" id="color-palette"></div>
+            
+            <input type="text" 
+                   class="word-input" 
+                   id="word-input" 
+                   placeholder="Your word..." 
+                   maxlength="18"
+                   autocomplete="off">
+            
+            <button class="submit-btn" id="submit-btn" onclick="submitContribution()">
+                Add to Canvas
+            </button>
+            
+            <div id="status-message"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
