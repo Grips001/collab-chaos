@@ -18,7 +18,9 @@ Collective Canvas is a premium real-time collaborative generative art platform t
 - Effect cycling system ensures visual variety across all 13 effects
 - Smooth 60fps progressive drawing animations with cubic-bezier easing
 - Effects paint themselves onto canvas creating authentic "watching an artist work" experience
-- **Animated Background**: Subtle floating dust particles that drift and twinkle like dust in sunlight, adding life to the canvas without interfering with main effects
+- **Nebula Transformation**: Completed effects gradually blur over 15 seconds into beautiful gas clouds (6px max blur)
+- **Individual Effect Blur**: Each effect transforms independently into colorful nebula formations
+- **Animated Background**: Subtle floating dust particles that drift and twinkle like dust in sunlight
 
 ### Modern UI/UX Design
 
@@ -33,6 +35,10 @@ Collective Canvas is a premium real-time collaborative generative art platform t
 ### Technical Excellence
 
 - **Smart Effect Positioning**: Intelligent margin-based positioning ensures effects are evenly distributed across the entire canvas without clipping
+- **Nebula System**: Individual effect blur system creates authentic cosmic gas cloud transformations
+- **Performance Optimized**: Throttled updates and smart redraw logic for smooth 60fps experience
+- **Vibrant Color Palette**: Background-aware colors that maintain visibility when blurred into gas clouds
+- **Layout Stability**: Button-integrated feedback system prevents interface resizing and blinking
 - **Adaptive Canvas Sizing**: Minimum dimensions (800x600) with responsive scaling for optimal effect rendering
 - **5-second Cooldown**: Prevents spam while maintaining engagement flow
 - **Content Moderation**: Basic profanity filtering with word length limits (1-18 characters)

@@ -74,14 +74,18 @@ npx serve .
 ### Canvas Optimization
 
 - **60fps Animation**: Canvas operations use requestAnimationFrame for smooth progressive drawing
-- **Dual Canvas System**: Separate overlay canvas for animated particles prevents interference with main effects
+- **Triple Canvas System**: Main canvas for effects, particle overlay, and individual effect blur canvases
+- **Nebula Blur System**: Individual canvas per completed effect enables independent blur transformations
+- **Performance Throttling**: Blur updates every 6th frame, particles every 4th frame for optimal performance
+- **Smart Redraw Logic**: Only redraws when blur actually changes, prevents unnecessary operations
+- **View-Specific Optimization**: Particle system only active in host view, disabled in participant interface
 - **Smart Positioning**: Margin-based effect placement prevents clipping and ensures even distribution
 - **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
 - **Progressive Rendering**: Effects are pre-calculated and rendered incrementally over 2-4 seconds
 - **Background Preservation**: Canvas resize handling maintains artistic gradient background
 - **Particle Animation**: Lightweight floating dust system with 30 particles, twinkling effects, and edge wrapping
 - **Effect Validation**: Dimension checks prevent effects from being created on undersized canvases
-- **Efficient Drawing**: Optimized rendering techniques with proper context management
+- **Memory Management**: Automatic cleanup of old effects prevents memory buildup
 
 ### UI Performance
 

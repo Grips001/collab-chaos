@@ -12,6 +12,8 @@ Collective Canvas creates a living, communal artwork where each participant adds
 
 **Phase Four Complete**: Added animated background system with floating dust particles that drift and twinkle like dust in sunlight, creating a living, breathing canvas atmosphere without interfering with the main collaborative effects.
 
+**Phase Five Complete**: Revolutionary nebula transformation system where each completed effect gradually blurs into beautiful gas clouds over 15 seconds, creating an authentic cosmic nebula atmosphere. Enhanced with performance optimizations, vibrant background-aware colors, and layout-stable interface design.
+
 ## ✨ Features
 
 ### **Modern Glassmorphism Interface**
@@ -28,34 +30,37 @@ Collective Canvas creates a living, communal artwork where each participant adds
 - **Host Canvas**: Floating glass control panel with artistic background integration
 - **Participant Interface**: Immersive glassmorphism form with premium color picker
 
-### **13 Spectacular Visual Effects**
+### **13 Spectacular Visual Effects with Nebula Transformation**
 
-Each word submission triggers one of these progressive drawing animations:
+Each word submission triggers one of these progressive drawing animations that then transform into beautiful gas clouds:
 
-1. **Neon Spiral** - Glowing spirals that draw outward progressively
-2. **Star Burst** - Explosive rays shooting from center with sparkles
-3. **Lightning Bolt** - Jagged electric bolts with bright white cores
-4. **Galaxy Swirl** - Three-armed spiral galaxy patterns
-5. **Fireworks** - Explosive bursts with trailing particle effects
-6. **Aurora** - Flowing northern lights gradients across the screen
-7. **Plasma** - Organic energy blobs with radial gradient fills
-8. **Crystalline** - Multi-layered geometric crystal structures
-9. **Vortex** - Spiraling particles moving inward to center
-10. **Paint Splash** - Realistic paint drops with drip effects
-11. **Laser Beam** - Bright laser lines with glowing cores
-12. **Fractal Tree** - Organic branching tree structures
-13. **Wave Ripple** - Expanding concentric circles like water ripples
+1. **Neon Spiral** → **Swirling Gas Cloud** - Glowing spirals that blur into cosmic swirls
+2. **Star Burst** → **Radiant Nebula** - Explosive rays that diffuse into gaseous formations
+3. **Lightning Bolt** → **Energy Wisp** - Electric bolts that become ethereal energy clouds
+4. **Galaxy Swirl** → **Spiral Nebula** - Galaxy patterns that transform into cosmic gas spirals
+5. **Fireworks** → **Particle Cloud** - Explosive bursts that become diffused particle nebulae
+6. **Aurora** → **Light Ribbons** - Northern lights that blur into flowing gas ribbons
+7. **Plasma** → **Energy Blobs** - Organic energy that becomes soft plasma clouds
+8. **Crystalline** → **Crystal Mist** - Geometric structures that diffuse into crystalline gas
+9. **Vortex** → **Spiral Mist** - Spiraling particles that become swirling gas formations
+10. **Paint Splash** → **Color Clouds** - Paint drops that blur into colorful gas clouds
+11. **Laser Beam** → **Light Streaks** - Laser lines that become glowing gas streaks
+12. **Fractal Tree** → **Organic Mist** - Tree structures that transform into organic gas formations
+13. **Wave Ripple** → **Ripple Clouds** - Expanding circles that become soft rippling gas
 
-### **Progressive Drawing System**
+### **Progressive Drawing & Nebula System**
 
 - **Smart Positioning**: Intelligent margin-based placement ensures effects are evenly distributed across the entire canvas
 - **Clipping Prevention**: Each effect type uses appropriate margins (50-150px) to prevent visual cutoff
 - **Adaptive Canvas**: Minimum dimensions (800x600) with responsive scaling for optimal rendering
 - **Progressive Animation**: Effects paint themselves over 2-4 seconds with smooth 60fps animations
+- **Nebula Transformation**: After 3 seconds, effects gradually blur over 15 seconds into 6px gas clouds
+- **Individual Blur System**: Each effect transforms independently using separate canvas layers
+- **Cosmic Atmosphere**: Creates authentic nebula appearance with colorful gas cloud formations
 - **Premium Timing**: Each effect has unique cubic-bezier easing for authentic artistic feel
 - **Canvas Validation**: Dimension checks ensure effects are only created on properly sized canvases
 - **Background Preservation**: Resize handling maintains artistic gradient background integrity
-- **Animated Background**: Dual canvas system with floating dust particles that create ambient atmosphere
+- **Animated Background**: Triple canvas system with floating dust particles and nebula layers
 
 ### **Real-time Collaboration**
 
@@ -169,13 +174,15 @@ Each word submission triggers one of these progressive drawing animations:
 ### **Visual System**
 
 - **HTML5 Canvas**: High-performance 2D graphics rendering with intelligent resize handling
-- **Dual Canvas Architecture**: Main canvas for permanent effects, overlay canvas for animated particles
+- **Triple Canvas Architecture**: Main canvas for effects, particle overlay, individual blur canvases for nebula system
+- **Nebula Transformation**: Individual effect blur system creates authentic cosmic gas cloud formations
 - **Smart Positioning**: Margin-based effect placement ensures even distribution without clipping
 - **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
 - **Progressive Animation**: 60fps drawing effects with cubic-bezier easing and validation
 - **Effect Cycling**: Guaranteed variety through all 13 visual styles with proper spacing
 - **Artistic Background**: Beautiful radial gradient backdrop with floating dust particles
 - **Particle System**: 30 subtle particles that drift and twinkle like dust in sunlight
+- **Performance Optimization**: Throttled updates and view-specific processing for smooth experience
 - **Glassmorphism UI**: Frosted glass effects with backdrop-filter throughout interface
 
 ### **Content Moderation**
@@ -216,11 +223,21 @@ The canvas becomes a living, breathing collaborative artwork that grows and evol
 
 ## 🔧 Recent Improvements
 
+### **Phase Five: Nebula Transformation System**
+
+- **Individual Effect Blur**: Each completed effect gets its own canvas and blurs independently
+- **Cosmic Gas Clouds**: Effects transform over 15 seconds into beautiful 6px blurred nebula formations
+- **Performance Optimized**: Throttled updates (blur every 6th frame) and smart redraw logic
+- **Vibrant Color Palette**: Background-aware colors that maintain visibility when blurred
+- **Layout Stability**: Button-integrated feedback eliminates interface resizing and blinking
+- **Memory Management**: Automatic cleanup of old effects (10 effect limit, 3-minute lifespan)
+- **View Optimization**: Particle system only active in host view for better participant performance
+
 ### **Phase Four: Animated Background System**
 
 - **Floating Dust Particles**: 30 subtle particles that drift and twinkle like dust in sunlight
-- **Dual Canvas Architecture**: Separate overlay canvas for particles prevents interference with main effects
-- **Performance Optimized**: Lightweight particle system with efficient 60fps rendering
+- **Triple Canvas Architecture**: Main canvas, particle overlay, and individual blur canvases
+- **Performance Optimized**: Lightweight particle system with efficient rendering
 - **Seamless Integration**: Particles clear and redraw each frame while main effects remain permanent
 - **Atmospheric Enhancement**: Creates living, breathing canvas atmosphere without distraction
 

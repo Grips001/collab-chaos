@@ -9,6 +9,9 @@ class CollectiveCanvas {
         this.animationId = null;
         this.drawingEffects = []; // Active drawing effects
         
+        // Individual effect blur system
+        this.completedEffects = []; // Effects that are gradually blurring
+        
         // Background particle system
         this.backgroundParticles = [];
         this.setupParticleCanvas();
@@ -21,12 +24,12 @@ class CollectiveCanvas {
         ];
         this.effectIndex = Math.floor(Math.random() * this.effects.length);
         
-        // Color palette for participants
+        // Color palette for participants - vibrant colors that contrast well with dark blue/purple background
         this.colorPalette = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD',
-            '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9', '#F8C471', '#82E0AA',
-            '#F1948A', '#85C1E9', '#F4D03F', '#AED6F1', '#A9DFBF', '#F5B7B1',
-            '#D7BDE2', '#A3E4D7', '#FAD7A0', '#D5A6BD', '#A9CCE3', '#ABEBC6'
+            '#FF0066', '#00FFFF', '#FF3300', '#FFFF00', '#FF00FF', '#00FF66',
+            '#FF6600', '#00FF00', '#FF0033', '#FFCC00', '#00FF99', '#FF9900',
+            '#FF3366', '#33FF00', '#FF0099', '#99FF00', '#FF6633', '#66FF00',
+            '#FF1A8C', '#1AFF8C', '#FF8C1A', '#8CFF1A', '#FF4D00', '#4DFF00'
         ];
         
         this.init();
@@ -96,6 +99,10 @@ class CollectiveCanvas {
         this.resizeCanvas();
         window.addEventListener('resize', () => this.resizeCanvas());
         
+        // Optimize main canvas for performance
+        this.ctx.imageSmoothingEnabled = true;
+        this.ctx.imageSmoothingQuality = 'high';
+        
         // Create beautiful gradient background
         this.createArtisticBackground();
     }
@@ -135,6 +142,9 @@ class CollectiveCanvas {
         // Reinitialize background particles for new canvas size
         this.initBackgroundParticles();
         
+        // Clear completed effects on resize
+        this.completedEffects = [];
+        
         // Note: Any existing artwork will be lost during resize
         // This is acceptable for this type of collaborative art experience
     }
@@ -154,6 +164,11 @@ class CollectiveCanvas {
         document.getElementById('host-view').style.display = 'block';
         document.getElementById('participant-view').style.display = 'none';
         
+        // Show particle canvas in host view
+        if (this.particleCanvas) {
+            this.particleCanvas.style.display = 'block';
+        }
+        
         document.getElementById('canvas-id').textContent = this.canvasId;
         const joinUrl = `${window.location.origin}${window.location.pathname}?join=${this.canvasId}`;
         document.getElementById('join-url').textContent = joinUrl;
@@ -165,6 +180,11 @@ class CollectiveCanvas {
     showParticipantView(joinId) {
         document.getElementById('host-view').style.display = 'none';
         document.getElementById('participant-view').style.display = 'flex';
+        
+        // Hide particle canvas in participant view to prevent blinking
+        if (this.particleCanvas) {
+            this.particleCanvas.style.display = 'none';
+        }
         
         this.targetCanvasId = joinId;
         this.setupColorPalette();
@@ -222,25 +242,28 @@ class CollectiveCanvas {
     }
 
     submitContribution() {
+        const submitBtn = document.getElementById('submit-btn');
+        const originalText = submitBtn.textContent;
+        
         if (!this.selectedColor) {
-            this.showStatus('Please select a color first', 'error');
+            this.showButtonError(submitBtn, 'Select a color first', originalText);
             return;
         }
 
         const word = document.getElementById('word-input').value.trim();
         if (!word) {
-            this.showStatus('Please enter a word', 'error');
+            this.showButtonError(submitBtn, 'Enter a word', originalText);
             return;
         }
 
         if (word.length > 18) {
-            this.showStatus('Word must be 18 characters or less', 'error');
+            this.showButtonError(submitBtn, 'Word too long', originalText);
             return;
         }
 
         const inappropriate = ['fuck', 'shit', 'bitch', 'cunt'];
         if (inappropriate.some(bad => word.toLowerCase() === bad)) {
-            this.showStatus('Please choose a different word', 'error');
+            this.showButtonError(submitBtn, 'Choose different word', originalText);
             return;
         }
 
@@ -248,7 +271,7 @@ class CollectiveCanvas {
         const now = Date.now();
         if (lastSubmission && (now - parseInt(lastSubmission)) < 5000) {
             const remaining = Math.ceil((5000 - (now - parseInt(lastSubmission))) / 1000);
-            this.showStatus(`Please wait ${remaining} seconds before submitting again`, 'error');
+            this.showButtonError(submitBtn, `Wait ${remaining}s`, originalText);
             return;
         }
 
@@ -262,17 +285,14 @@ class CollectiveCanvas {
 
         this.saveSubmission(submission);
         
-        this.showStatus('Your mark has been added to the canvas!', 'success');
+        // Clear the input field
         document.getElementById('word-input').value = '';
         document.getElementById('submit-btn').disabled = true;
         
         localStorage.setItem('lastSubmission', now.toString());
-        setTimeout(() => {
-            document.getElementById('submit-btn').disabled = false;
-            this.checkCooldown();
-        }, 5000);
-
-        this.showCooldownTimer();
+        
+        // Update button to show cooldown instead of separate message
+        this.startButtonCooldown(submitBtn, 5);
     }
 
     saveSubmission(submission) {
@@ -771,29 +791,52 @@ class CollectiveCanvas {
     }
 
     updateDrawingEffects() {
-        // Update and draw particles on separate canvas
-        this.updateAndDrawParticles();
+        // Check if we're in host view (has canvas effects) vs participant view
+        const isHostView = document.getElementById('host-view').style.display !== 'none';
         
-        // Process main drawing effects on main canvas
-        for (let i = this.drawingEffects.length - 1; i >= 0; i--) {
-            const effect = this.drawingEffects[i];
-            effect.progress += effect.speed;
+        // Only update particles if we're in host view, and less frequently
+        if (isHostView && this.frameCount % 4 === 0) { // Update particles every 4th frame, only in host view
+            this.updateAndDrawParticles();
+        }
+        
+        // Only process blur system in host view
+        if (isHostView) {
+            // Update completed effects that are gradually blurring (even less frequent updates)
+            if (this.frameCount % 6 === 0) { // Update blur every 6th frame for better performance
+                this.updateCompletedEffects();
+            }
             
-            if (effect.progress >= 1) {
-                // Effect is complete, draw final version and remove
-                this.drawFinalEffect(effect);
-                this.drawingEffects.splice(i, 1);
-            } else {
-                // Continue drawing the effect progressively
-                this.drawProgressiveEffect(effect);
+            // Only redraw completed effects when they actually changed (less frequent)
+            if (this.completedEffects.length > 0 && (this.needsCompletedEffectsRedraw || this.frameCount % 6 === 0)) {
+                this.redrawCompletedEffects();
+                this.needsCompletedEffectsRedraw = false; // Reset flag
+            }
+            
+            // Process and draw active effects AFTER completed effects (ensures they're always on top)
+            for (let i = this.drawingEffects.length - 1; i >= 0; i--) {
+                const effect = this.drawingEffects[i];
+                effect.progress += effect.speed;
+                
+                if (effect.progress >= 1) {
+                    // Effect is complete, add to blur system
+                    this.addCompletedEffect(effect);
+                    this.drawingEffects.splice(i, 1);
+                    this.needsCompletedEffectsRedraw = true; // Flag for redraw
+                } else {
+                    // Continue drawing the effect progressively (always on top)
+                    this.drawProgressiveEffect(effect);
+                }
             }
         }
+        
+        // Increment frame counter for performance throttling
+        this.frameCount = (this.frameCount || 0) + 1;
     }
 
     updateAndDrawParticles() {
         if (!this.particleCanvas || !this.particleCtx) return;
         
-        // Clear the particle canvas each frame
+        // Clear the particle canvas each frame (but only when actually updating)
         this.particleCtx.clearRect(0, 0, this.particleCanvas.width, this.particleCanvas.height);
         
         this.particleCtx.save();
@@ -825,6 +868,133 @@ class CollectiveCanvas {
         }
         
         this.particleCtx.restore();
+    }
+
+    addCompletedEffect(effect) {
+        // Create a separate canvas for this effect to blur independently
+        const effectCanvas = document.createElement('canvas');
+        effectCanvas.width = this.canvas.width;
+        effectCanvas.height = this.canvas.height;
+        const effectCtx = effectCanvas.getContext('2d');
+        
+        // Optimize canvas for better performance
+        effectCtx.imageSmoothingEnabled = true;
+        effectCtx.imageSmoothingQuality = 'high';
+        
+        // Draw the effect on its own canvas
+        const originalCtx = this.ctx;
+        this.ctx = effectCtx;
+        this.drawFinalEffect(effect);
+        this.ctx = originalCtx;
+        
+        // Add to blur system with proper z-order tracking
+        const completedEffect = {
+            canvas: effectCanvas,
+            completedTime: Date.now(),
+            zOrder: Date.now(), // Unique z-order for proper layering
+            blurProgress: 0,
+            maxBlur: 6, // Capped blur - enough for gas effect but stays visible
+            blurDuration: 15000, // 15 seconds to reach max blur
+            needsInitialDraw: true
+        };
+        
+        this.completedEffects.push(completedEffect);
+        
+        // Limit total effects to prevent performance issues (reduced limit)
+        if (this.completedEffects.length > 10) {
+            this.completedEffects.shift(); // Remove oldest effect
+            console.log(`Removed oldest effect for performance, remaining: ${this.completedEffects.length}`);
+        }
+        
+        console.log(`Added effect to blur system, total: ${this.completedEffects.length}`);
+    }
+
+    updateCompletedEffects() {
+        const now = Date.now();
+        let needsRedraw = false;
+        
+        // Check if any effects need blur updates (only update every 200ms for performance)
+        for (let i = this.completedEffects.length - 1; i >= 0; i--) {
+            const effect = this.completedEffects[i];
+            const timeSinceCompletion = now - effect.completedTime;
+            
+            // Start blurring after 3 seconds
+            if (timeSinceCompletion > 3000) {
+                const blurTime = timeSinceCompletion - 3000;
+                const blurProgress = Math.min(blurTime / effect.blurDuration, 1);
+                
+                // Use smooth easing and cap at maximum blur
+                const easedProgress = 1 - Math.pow(1 - blurProgress, 2); // Less aggressive easing
+                const newBlurProgress = Math.min(easedProgress, 1); // Cap at 1 (max blur)
+                
+                // Only update if blur changed significantly (reduce redraws)
+                if (Math.abs(newBlurProgress - effect.blurProgress) > 0.05) { // Increased threshold
+                    effect.blurProgress = newBlurProgress;
+                    needsRedraw = true;
+                    
+                    // Log when effect reaches maximum blur (remove frequent logging)
+                    if (newBlurProgress >= 0.99 && effect.blurProgress < 0.99) {
+                        console.log(`Effect reached maximum blur (${effect.maxBlur}px) - will remain visible as gas cloud`);
+                    }
+                }
+            }
+            
+            // Remove effect after very long time to prevent memory buildup
+            if (timeSinceCompletion > 180000) { // 3 minutes total
+                this.completedEffects.splice(i, 1);
+                needsRedraw = true;
+                console.log(`Removed old effect, remaining: ${this.completedEffects.length}`);
+            }
+        }
+        
+        // Store whether we need to redraw for the main loop
+        this.needsCompletedEffectsRedraw = needsRedraw || this.completedEffects.some(e => e.needsInitialDraw);
+        
+        // Performance logging (remove after debugging)
+        if (needsRedraw) {
+            console.log(`Blur update triggered redraw, ${this.completedEffects.length} effects`);
+        }
+    }
+
+    redrawCompletedEffects() {
+        // Clear the main canvas and redraw background
+        this.createArtisticBackground();
+        
+        // Sort completed effects by completion time (oldest first) to maintain proper layering
+        const sortedEffects = [...this.completedEffects].sort((a, b) => a.completedTime - b.completedTime);
+        
+        // Group effects by blur level for batch rendering, but maintain order within groups
+        const blurGroups = {};
+        
+        for (const effect of sortedEffects) {
+            const currentBlur = Math.round(effect.blurProgress * effect.maxBlur * 2) / 2; // Round to 0.5px increments
+            if (!blurGroups[currentBlur]) {
+                blurGroups[currentBlur] = [];
+            }
+            blurGroups[currentBlur].push(effect);
+            effect.needsInitialDraw = false;
+        }
+        
+        // Render each blur group together, but in order from lowest to highest blur
+        // This ensures older effects (more blurred) are behind newer effects (less blurred)
+        const sortedBlurLevels = Object.keys(blurGroups).map(parseFloat).sort((a, b) => b - a); // Highest blur first
+        
+        for (const blurLevel of sortedBlurLevels) {
+            const effects = blurGroups[blurLevel];
+            
+            this.ctx.save();
+            if (blurLevel > 0) {
+                this.ctx.filter = `blur(${blurLevel}px)`;
+            }
+            this.ctx.globalAlpha = 1.0;
+            
+            // Draw effects in chronological order (oldest first within this blur level)
+            for (const effect of effects) {
+                this.ctx.drawImage(effect.canvas, 0, 0);
+            }
+            
+            this.ctx.restore();
+        }
     }
 
     drawProgressiveEffect(effect) {
@@ -1298,31 +1468,36 @@ class CollectiveCanvas {
             const remaining = Math.ceil((5000 - (now - parseInt(lastSubmission))) / 1000);
             const submitBtn = document.getElementById('submit-btn');
             if (submitBtn) {
-                submitBtn.disabled = true;
-                this.showCooldownTimer(remaining);
+                this.startButtonCooldown(submitBtn, remaining);
             }
         }
     }
 
-    showCooldownTimer(remaining = 5) {
-        const statusDiv = document.getElementById('status-message');
-        if (!statusDiv) return;
+    startButtonCooldown(button, seconds) {
+        button.disabled = true;
+        const originalText = button.textContent;
         
-        const updateTimer = () => {
+        const updateButton = (remaining) => {
             if (remaining > 0) {
-                statusDiv.textContent = `Please wait ${remaining} seconds before submitting again`;
-                statusDiv.className = 'status-message cooldown';
-                statusDiv.style.display = 'block';
-                remaining--;
-                setTimeout(updateTimer, 1000);
+                button.textContent = `Please wait ${remaining}s...`;
+                setTimeout(() => updateButton(remaining - 1), 1000);
             } else {
-                statusDiv.style.display = 'none';
-                const submitBtn = document.getElementById('submit-btn');
-                if (submitBtn) submitBtn.disabled = false;
+                button.textContent = originalText;
+                button.disabled = false;
             }
         };
         
-        updateTimer();
+        updateButton(seconds);
+    }
+
+    showButtonError(button, errorText, originalText) {
+        button.textContent = errorText;
+        button.disabled = true;
+        
+        setTimeout(() => {
+            button.textContent = originalText;
+            button.disabled = false;
+        }, 2000); // Show error for 2 seconds
     }
 }
 
