@@ -10,6 +10,8 @@ Collective Canvas creates a living, communal artwork where each participant adds
 
 **Phase Three Complete**: Enhanced with intelligent effect positioning system that ensures perfect distribution across the entire canvas, preventing clipping and creating more balanced collaborative artworks.
 
+**Phase Four Complete**: Added animated background system with floating dust particles that drift and twinkle like dust in sunlight, creating a living, breathing canvas atmosphere without interfering with the main collaborative effects.
+
 ## ✨ Features
 
 ### **Modern Glassmorphism Interface**
@@ -18,6 +20,7 @@ Collective Canvas creates a living, communal artwork where each participant adds
 - **Inter Typography**: Professional font family with multiple weights for crisp, modern text
 - **Fluid Animations**: Smooth transitions with cubic-bezier easing for premium feel
 - **Immersive Backgrounds**: Multi-layer gradients with subtle grain textures
+- **Animated Atmosphere**: Floating dust particles that drift and twinkle like dust in sunlight
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
 ### **Dual Interface System**
@@ -52,6 +55,7 @@ Each word submission triggers one of these progressive drawing animations:
 - **Premium Timing**: Each effect has unique cubic-bezier easing for authentic artistic feel
 - **Canvas Validation**: Dimension checks ensure effects are only created on properly sized canvases
 - **Background Preservation**: Resize handling maintains artistic gradient background integrity
+- **Animated Background**: Dual canvas system with floating dust particles that create ambient atmosphere
 
 ### **Real-time Collaboration**
 
@@ -72,7 +76,8 @@ Each word submission triggers one of these progressive drawing animations:
 ### **Host Interface**
 
 - **Floating Control Panel**: Glassmorphism controls that blend with the canvas background
-- **Artistic Background**: Beautiful radial gradient that persists through window resizing
+- **Artistic Background**: Beautiful radial gradient with floating dust particles that persists through window resizing
+- **Living Canvas**: Subtle animated particles drift and twinkle like dust in sunlight
 - **Join Banner**: Elegant glass card with gradient text for the shareable URL
 - **Responsive Layout**: Adapts seamlessly to different screen sizes
 
@@ -148,6 +153,7 @@ Each word submission triggers one of these progressive drawing animations:
 
 - **Frontend Only**: No server infrastructure required
 - **Self-contained**: Single HTML file with embedded CSS and JavaScript
+- **Dual Canvas System**: Main canvas for permanent effects, overlay canvas for animated particles
 - **Cross-platform**: Works on any modern web browser with glassmorphism support
 - **Responsive Design**: Optimized for desktop, tablet, and mobile with fluid layouts
 - **Modern CSS**: Glassmorphism effects using backdrop-filter and CSS Grid/Flexbox
@@ -163,11 +169,13 @@ Each word submission triggers one of these progressive drawing animations:
 ### **Visual System**
 
 - **HTML5 Canvas**: High-performance 2D graphics rendering with intelligent resize handling
+- **Dual Canvas Architecture**: Main canvas for permanent effects, overlay canvas for animated particles
 - **Smart Positioning**: Margin-based effect placement ensures even distribution without clipping
 - **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
 - **Progressive Animation**: 60fps drawing effects with cubic-bezier easing and validation
 - **Effect Cycling**: Guaranteed variety through all 13 visual styles with proper spacing
-- **Artistic Background**: Beautiful radial gradient backdrop that persists through resizing
+- **Artistic Background**: Beautiful radial gradient backdrop with floating dust particles
+- **Particle System**: 30 subtle particles that drift and twinkle like dust in sunlight
 - **Glassmorphism UI**: Frosted glass effects with backdrop-filter throughout interface
 
 ### **Content Moderation**
@@ -207,6 +215,14 @@ The canvas becomes a living, breathing collaborative artwork that grows and evol
 - **Accessibility**: High contrast modes and reduced motion support
 
 ## 🔧 Recent Improvements
+
+### **Phase Four: Animated Background System**
+
+- **Floating Dust Particles**: 30 subtle particles that drift and twinkle like dust in sunlight
+- **Dual Canvas Architecture**: Separate overlay canvas for particles prevents interference with main effects
+- **Performance Optimized**: Lightweight particle system with efficient 60fps rendering
+- **Seamless Integration**: Particles clear and redraw each frame while main effects remain permanent
+- **Atmospheric Enhancement**: Creates living, breathing canvas atmosphere without distraction
 
 ### **Phase Three: Smart Positioning System**
 
@@ -275,6 +291,7 @@ This project is open source and available under the MIT License.
 Contributions are welcome! Areas for enhancement:
 
 - **Additional Visual Effects**: New progressive drawing animations with smart positioning
+- **Enhanced Particle System**: More particle types, physics interactions, or environmental effects
 - **Sound Integration**: Audio feedback for effect creation and completion
 - **Advanced Moderation**: Enhanced content filtering and admin controls
 - **Performance Optimizations**: Further canvas rendering improvements

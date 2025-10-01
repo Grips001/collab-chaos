@@ -21,7 +21,8 @@ collective-canvas/
 ### Main Application Class
 
 - **CollectiveCanvas**: Primary class in `app.js` managing entire application lifecycle
-- **Constructor**: Initializes canvas, generates session ID, sets up color palette, creates drawing effects array
+- **Constructor**: Initializes main canvas, particle overlay canvas, generates session ID, sets up color palette, creates drawing effects array
+- **Dual Canvas System**: Main canvas for permanent effects, separate overlay canvas for animated particles
 - **View Management**: Handles host vs participant interface switching with glassmorphism styling
 
 ### Key Methods Organization
@@ -30,6 +31,7 @@ collective-canvas/
 
 - **Setup Methods**: `init()`, `setupCanvas()`, `setupView()`, `setupEventListeners()`, `setupBroadcastChannel()`
 - **UI Methods**: `createArtisticBackground()`, `resizeCanvas()` (with background preservation)
+- **Particle System**: `setupParticleCanvas()`, `initBackgroundParticles()`, `updateAndDrawParticles()`
 - **View Methods**: `showHostView()`, `showParticipantView()`, `setupColorPalette()`
 
 #### Submission & Sync
@@ -121,7 +123,9 @@ Each visual effect follows consistent progressive drawing pattern with smart pos
 ### app.js
 
 - **Application Logic**: Complete class-based architecture with all methods
+- **Dual Canvas System**: Main canvas for permanent effects, overlay canvas for animated particles
 - **Canvas Rendering**: 13 progressive drawing effects with smart positioning and smooth animations
+- **Particle Animation**: 30 floating dust particles with twinkling effects and edge wrapping
 - **Canvas Management**: Minimum dimension enforcement (800x600 init, 400x300 validation) with resize handling
 - **Real-time Sync**: localStorage and BroadcastChannel integration
 - **UI Interactions**: Event handling, form validation, and state management
@@ -155,6 +159,13 @@ Each visual effect follows consistent progressive drawing pattern with smart pos
 - **Enhanced Canvas Management**: Minimum dimensions and validation for optimal rendering
 - **Improved Distribution**: Effects now spread evenly across entire canvas area
 - **Robust Resize Handling**: Background preservation with dimension enforcement
+
+### Phase Four (Complete)
+
+- **Animated Background System**: Dual canvas architecture with particle overlay
+- **Floating Dust Particles**: 30 subtle particles that drift and twinkle like dust in sunlight
+- **Performance Optimized**: Lightweight particle system with efficient rendering
+- **Seamless Integration**: Particles float independently without interfering with main effects
 
 ### Future Phases
 

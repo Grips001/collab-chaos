@@ -18,13 +18,15 @@ Collective Canvas is a premium real-time collaborative generative art platform t
 - Effect cycling system ensures visual variety across all 13 effects
 - Smooth 60fps progressive drawing animations with cubic-bezier easing
 - Effects paint themselves onto canvas creating authentic "watching an artist work" experience
+- **Animated Background**: Subtle floating dust particles that drift and twinkle like dust in sunlight, adding life to the canvas without interfering with main effects
 
 ### Modern UI/UX Design
 
 - **Glassmorphism Interface**: Frosted glass effects with backdrop blur throughout
 - **Premium Typography**: Inter font family for crisp, modern text rendering
 - **Fluid Animations**: Smooth transitions with cubic-bezier timing functions
-- **Immersive Backgrounds**: Multi-layer gradients with subtle grain textures
+- **Immersive Backgrounds**: Multi-layer gradients with subtle grain textures and animated dust particles
+- **Living Canvas**: Subtle floating particles create ambient atmosphere like dust in a beam of light
 - **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 - **Accessibility**: High contrast ratios, focus indicators, and semantic HTML
 

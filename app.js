@@ -9,6 +9,10 @@ class CollectiveCanvas {
         this.animationId = null;
         this.drawingEffects = []; // Active drawing effects
         
+        // Background particle system
+        this.backgroundParticles = [];
+        this.setupParticleCanvas();
+        
         // Effect cycling system
         this.effects = [
             'neonSpiral', 'starBurst', 'lightningBolt', 'galaxySwirl', 
@@ -35,6 +39,43 @@ class CollectiveCanvas {
         this.setupBroadcastChannel();
         this.startAnimation();
         this.setupStorage();
+    }
+
+    setupParticleCanvas() {
+        // Create a separate canvas for particles
+        this.particleCanvas = document.createElement('canvas');
+        this.particleCtx = this.particleCanvas.getContext('2d');
+        
+        // Style the particle canvas to overlay the main canvas
+        this.particleCanvas.style.position = 'fixed';
+        this.particleCanvas.style.top = '0';
+        this.particleCanvas.style.left = '0';
+        this.particleCanvas.style.pointerEvents = 'none';
+        this.particleCanvas.style.zIndex = '2'; // Above main canvas but below UI
+        
+        // Add to DOM
+        document.body.appendChild(this.particleCanvas);
+        
+        this.initBackgroundParticles();
+    }
+
+    initBackgroundParticles() {
+        // Create subtle floating dust particles
+        this.backgroundParticles = [];
+        const particleCount = 30; // Subtle amount
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.backgroundParticles.push({
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: 0.8 + Math.random() * 1.2, // Small particles
+                speedX: (Math.random() - 0.5) * 0.5, // Slow drift
+                speedY: (Math.random() - 0.5) * 0.5,
+                opacity: 0.15 + Math.random() * 0.25, // Subtle but visible
+                twinkle: Math.random() * Math.PI * 2, // For gentle twinkling
+                twinkleSpeed: 0.008 + Math.random() * 0.012
+            });
+        }
     }
 
     setupBroadcastChannel() {
@@ -78,12 +119,21 @@ class CollectiveCanvas {
         const minWidth = 800;
         const minHeight = 600;
         
-        // Resize canvas (this clears the canvas automatically)
+        // Resize main canvas (this clears the canvas automatically)
         this.canvas.width = Math.max(window.innerWidth, minWidth);
         this.canvas.height = Math.max(window.innerHeight, minHeight);
         
+        // Resize particle canvas to match
+        if (this.particleCanvas) {
+            this.particleCanvas.width = this.canvas.width;
+            this.particleCanvas.height = this.canvas.height;
+        }
+        
         // Always redraw the artistic background after resize
         this.createArtisticBackground();
+        
+        // Reinitialize background particles for new canvas size
+        this.initBackgroundParticles();
         
         // Note: Any existing artwork will be lost during resize
         // This is acceptable for this type of collaborative art experience
@@ -721,6 +771,10 @@ class CollectiveCanvas {
     }
 
     updateDrawingEffects() {
+        // Update and draw particles on separate canvas
+        this.updateAndDrawParticles();
+        
+        // Process main drawing effects on main canvas
         for (let i = this.drawingEffects.length - 1; i >= 0; i--) {
             const effect = this.drawingEffects[i];
             effect.progress += effect.speed;
@@ -734,6 +788,43 @@ class CollectiveCanvas {
                 this.drawProgressiveEffect(effect);
             }
         }
+    }
+
+    updateAndDrawParticles() {
+        if (!this.particleCanvas || !this.particleCtx) return;
+        
+        // Clear the particle canvas each frame
+        this.particleCtx.clearRect(0, 0, this.particleCanvas.width, this.particleCanvas.height);
+        
+        this.particleCtx.save();
+        
+        for (let particle of this.backgroundParticles) {
+            // Update position with gentle drift
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            
+            // Update twinkling effect
+            particle.twinkle += particle.twinkleSpeed;
+            
+            // Wrap particles around screen edges
+            if (particle.x < -5) particle.x = this.particleCanvas.width + 5;
+            if (particle.x > this.particleCanvas.width + 5) particle.x = -5;
+            if (particle.y < -5) particle.y = this.particleCanvas.height + 5;
+            if (particle.y > this.particleCanvas.height + 5) particle.y = -5;
+            
+            // Calculate twinkling opacity
+            const twinkleOpacity = particle.opacity * (0.8 + 0.2 * Math.sin(particle.twinkle));
+            
+            // Draw particle as simple floating dust
+            this.particleCtx.globalAlpha = twinkleOpacity;
+            this.particleCtx.fillStyle = '#ffffff';
+            
+            this.particleCtx.beginPath();
+            this.particleCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.particleCtx.fill();
+        }
+        
+        this.particleCtx.restore();
     }
 
     drawProgressiveEffect(effect) {

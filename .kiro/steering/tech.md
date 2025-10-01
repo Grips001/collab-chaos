@@ -29,6 +29,7 @@
 ### Visual Effects
 
 - **Progressive Drawing**: Canvas effects that animate over time using requestAnimationFrame
+- **Animated Background**: Separate canvas layer with floating dust particles for ambient atmosphere
 - **Smooth Transitions**: 0.3s cubic-bezier(0.4, 0, 0.2, 1) for premium feel
 - **Micro-interactions**: Hover states, focus indicators, and button animations
 - **Glass Morphism**: Semi-transparent backgrounds with blur effects throughout
@@ -73,10 +74,12 @@ npx serve .
 ### Canvas Optimization
 
 - **60fps Animation**: Canvas operations use requestAnimationFrame for smooth progressive drawing
+- **Dual Canvas System**: Separate overlay canvas for animated particles prevents interference with main effects
 - **Smart Positioning**: Margin-based effect placement prevents clipping and ensures even distribution
 - **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
 - **Progressive Rendering**: Effects are pre-calculated and rendered incrementally over 2-4 seconds
 - **Background Preservation**: Canvas resize handling maintains artistic gradient background
+- **Particle Animation**: Lightweight floating dust system with 30 particles, twinkling effects, and edge wrapping
 - **Effect Validation**: Dimension checks prevent effects from being created on undersized canvases
 - **Efficient Drawing**: Optimized rendering techniques with proper context management
 
