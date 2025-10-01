@@ -72,10 +72,13 @@ npx serve .
 
 ### Canvas Optimization
 
-- Canvas operations use requestAnimationFrame for smooth 60fps
-- Progressive drawing effects are pre-calculated and rendered incrementally
-- Canvas resize handling preserves background integrity
-- Effect animations use efficient drawing techniques
+- **60fps Animation**: Canvas operations use requestAnimationFrame for smooth progressive drawing
+- **Smart Positioning**: Margin-based effect placement prevents clipping and ensures even distribution
+- **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
+- **Progressive Rendering**: Effects are pre-calculated and rendered incrementally over 2-4 seconds
+- **Background Preservation**: Canvas resize handling maintains artistic gradient background
+- **Effect Validation**: Dimension checks prevent effects from being created on undersized canvases
+- **Efficient Drawing**: Optimized rendering techniques with proper context management
 
 ### UI Performance
 

@@ -30,11 +30,13 @@ Collective Canvas is a premium real-time collaborative generative art platform t
 
 ### Technical Excellence
 
-- 5-second cooldown prevents spam while maintaining engagement
-- Basic content moderation with profanity filtering
-- Host controls with glassmorphism styling for pause/resume, clearing, and saving
-- Canvas resize handling that preserves background integrity
-- Cross-browser compatibility with modern web APIs
+- **Smart Effect Positioning**: Intelligent margin-based positioning ensures effects are evenly distributed across the entire canvas without clipping
+- **Adaptive Canvas Sizing**: Minimum dimensions (800x600) with responsive scaling for optimal effect rendering
+- **5-second Cooldown**: Prevents spam while maintaining engagement flow
+- **Content Moderation**: Basic profanity filtering with word length limits (1-18 characters)
+- **Host Controls**: Glassmorphism-styled controls for pause/resume, clearing, and saving
+- **Canvas Resize Handling**: Preserves background integrity with minimum dimension enforcement
+- **Cross-browser Compatibility**: Modern web APIs with graceful fallbacks
 
 ## Use Cases
 

@@ -8,6 +8,8 @@ Collective Canvas creates a living, communal artwork where each participant adds
 
 **Phase Two Complete**: Now featuring a premium glassmorphism UI with Inter typography, fluid animations, and immersive backgrounds that blend seamlessly with the artistic canvas.
 
+**Phase Three Complete**: Enhanced with intelligent effect positioning system that ensures perfect distribution across the entire canvas, preventing clipping and creating more balanced collaborative artworks.
+
 ## ✨ Features
 
 ### **Modern Glassmorphism Interface**
@@ -43,11 +45,13 @@ Each word submission triggers one of these progressive drawing animations:
 
 ### **Progressive Drawing System**
 
-- Effects paint themselves onto the canvas over 2-4 seconds with smooth 60fps animations
-- Each effect has unique timing and cubic-bezier easing for premium feel
-- Creates authentic "watching an artist work" experience with fluid motion
-- Permanent marks that layer and accumulate on artistic gradient background
-- Canvas resize handling preserves background integrity
+- **Smart Positioning**: Intelligent margin-based placement ensures effects are evenly distributed across the entire canvas
+- **Clipping Prevention**: Each effect type uses appropriate margins (50-150px) to prevent visual cutoff
+- **Adaptive Canvas**: Minimum dimensions (800x600) with responsive scaling for optimal rendering
+- **Progressive Animation**: Effects paint themselves over 2-4 seconds with smooth 60fps animations
+- **Premium Timing**: Each effect has unique cubic-bezier easing for authentic artistic feel
+- **Canvas Validation**: Dimension checks ensure effects are only created on properly sized canvases
+- **Background Preservation**: Resize handling maintains artistic gradient background integrity
 
 ### **Real-time Collaboration**
 
@@ -158,9 +162,11 @@ Each word submission triggers one of these progressive drawing animations:
 
 ### **Visual System**
 
-- **HTML5 Canvas**: High-performance 2D graphics rendering with resize handling
-- **Progressive Animation**: 60fps drawing effects with cubic-bezier easing
-- **Effect Cycling**: Guaranteed variety through all 13 visual styles
+- **HTML5 Canvas**: High-performance 2D graphics rendering with intelligent resize handling
+- **Smart Positioning**: Margin-based effect placement ensures even distribution without clipping
+- **Adaptive Sizing**: Minimum canvas dimensions (800x600) with responsive scaling
+- **Progressive Animation**: 60fps drawing effects with cubic-bezier easing and validation
+- **Effect Cycling**: Guaranteed variety through all 13 visual styles with proper spacing
 - **Artistic Background**: Beautiful radial gradient backdrop that persists through resizing
 - **Glassmorphism UI**: Frosted glass effects with backdrop-filter throughout interface
 
@@ -200,6 +206,27 @@ The canvas becomes a living, breathing collaborative artwork that grows and evol
 - **Mobile Browsers**: Optimized touch interface with responsive glassmorphism design
 - **Accessibility**: High contrast modes and reduced motion support
 
+## 🔧 Recent Improvements
+
+### **Phase Three: Smart Positioning System**
+
+- **Even Distribution**: Effects now use margin-based positioning to spread evenly across the canvas
+- **Clipping Prevention**: Each effect type has appropriate margins (50-150px) to prevent visual cutoff
+- **Canvas Validation**: Effects only created when canvas meets minimum requirements (400x300 for creation, 800x600 for initialization)
+- **Adaptive Sizing**: Responsive canvas scaling maintains quality across different screen sizes
+- **Enhanced Debugging**: Improved logging for effect creation and canvas dimension tracking
+
+### **Effect-Specific Margins**
+
+- **Neon Spiral**: 100px margin for spiral arms
+- **Star Burst**: 150px margin for explosive rays
+- **Lightning Bolt**: 50px margin for jagged paths
+- **Galaxy Swirl**: 120px margin for spiral arms
+- **Fireworks**: 100px margin for particle spread
+- **Aurora**: 80px margin + extra space for wave height
+- **Wave Ripple**: 150px margin for expanding circles
+- **And more**: Each effect optimized for its unique characteristics
+
 ## 🔧 Customization
 
 ### **Color Palette**
@@ -214,11 +241,21 @@ this.colorPalette = [
 
 ### **Effect Parameters**
 
-Modify drawing speeds, sizes, and behaviors in the effect creation methods:
+Modify drawing speeds, sizes, and positioning in the effect creation methods:
 
 ```javascript
+const margin = 100; // Adjust positioning margins
 speed: 0.02, // Slower drawing
 maxPoints: word.length * 30, // More detail
+```
+
+### **Canvas Dimensions**
+
+Adjust minimum canvas size in the `resizeCanvas` method:
+
+```javascript
+const minWidth = 1200; // Larger minimum width
+const minHeight = 800; // Larger minimum height
 ```
 
 ### **Cooldown Timer**
@@ -237,11 +274,13 @@ This project is open source and available under the MIT License.
 
 Contributions are welcome! Areas for enhancement:
 
-- Additional visual effects
-- Sound integration
-- Advanced moderation features
-- Performance optimizations
-- Accessibility improvements
+- **Additional Visual Effects**: New progressive drawing animations with smart positioning
+- **Sound Integration**: Audio feedback for effect creation and completion
+- **Advanced Moderation**: Enhanced content filtering and admin controls
+- **Performance Optimizations**: Further canvas rendering improvements
+- **Accessibility Improvements**: Enhanced screen reader support and keyboard navigation
+- **Effect Positioning**: Advanced algorithms for optimal effect distribution
+- **Mobile Enhancements**: Touch-specific interactions and responsive optimizations
 
 ## 🎉 Acknowledgments
 

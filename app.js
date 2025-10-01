@@ -74,9 +74,13 @@ class CollectiveCanvas {
     }
 
     resizeCanvas() {
+        // Ensure minimum canvas dimensions
+        const minWidth = 800;
+        const minHeight = 600;
+        
         // Resize canvas (this clears the canvas automatically)
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
+        this.canvas.width = Math.max(window.innerWidth, minWidth);
+        this.canvas.height = Math.max(window.innerHeight, minHeight);
         
         // Always redraw the artistic background after resize
         this.createArtisticBackground();
@@ -280,10 +284,16 @@ class CollectiveCanvas {
     createVisualFromSubmission(submission) {
         const { word, color } = submission;
         
+        // Ensure canvas has valid dimensions before creating effects
+        if (this.canvas.width < 400 || this.canvas.height < 300) {
+            console.warn('Canvas dimensions too small, skipping effect creation');
+            return;
+        }
+        
         const effectType = this.effects[this.effectIndex];
         this.effectIndex = (this.effectIndex + 1) % this.effects.length;
         
-        console.log(`Creating: ${effectType} for "${word}"`);
+        console.log(`Creating: ${effectType} for "${word}" at canvas size ${this.canvas.width}x${this.canvas.height}`);
         
         // Create progressive drawing effects
         switch (effectType) {
@@ -333,8 +343,9 @@ class CollectiveCanvas {
 
     // Progressive effect creation methods
     createNeonSpiral(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 100; // Margin to prevent effects from being cut off
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const points = [];
         
         for (let i = 0; i < word.length * 20; i++) {
@@ -355,8 +366,9 @@ class CollectiveCanvas {
     }
 
     createStarBurst(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 150; // Larger margin for star burst effects
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const rays = 8 + word.length;
         const rayData = [];
         
@@ -380,10 +392,11 @@ class CollectiveCanvas {
     }
 
     createLightningBolt(word, color) {
-        const startX = Math.random() * this.canvas.width;
-        const startY = Math.random() * this.canvas.height;
-        const endX = Math.random() * this.canvas.width;
-        const endY = Math.random() * this.canvas.height;
+        const margin = 50;
+        const startX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const startY = margin + Math.random() * (this.canvas.height - 2 * margin);
+        const endX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const endY = margin + Math.random() * (this.canvas.height - 2 * margin);
         
         const segments = 8 + word.length;
         const points = [];
@@ -405,8 +418,9 @@ class CollectiveCanvas {
     }
 
     createGalaxySwirl(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 120; // Margin for galaxy spiral arms
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const armPoints = [];
         
         // Pre-calculate 3 spiral arms
@@ -435,8 +449,9 @@ class CollectiveCanvas {
     }
 
     createFireworks(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 100; // Margin for firework particles
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const particles = [];
         
         for (let i = 0; i < word.length * 15; i++) {
@@ -465,7 +480,8 @@ class CollectiveCanvas {
     }
 
     createAurora(word, color) {
-        const startY = Math.random() * this.canvas.height;
+        const margin = 80;
+        const startY = margin + Math.random() * (this.canvas.height - 2 * margin - 200); // Extra space for wave height
         const waves = [];
         
         for (let wave = 0; wave < 3 + Math.floor(word.length / 3); wave++) {
@@ -491,8 +507,9 @@ class CollectiveCanvas {
     }
 
     createPlasma(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 80; // Margin for plasma blobs
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const blobs = [];
         
         for (let i = 0; i < word.length * 8; i++) {
@@ -517,8 +534,9 @@ class CollectiveCanvas {
     }
 
     createCrystalline(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 100; // Margin for crystalline layers
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const layers = [];
         
         for (let layer = 0; layer < 4; layer++) {
@@ -548,8 +566,9 @@ class CollectiveCanvas {
     }
 
     createVortex(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 120; // Margin for vortex particles
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const particles = [];
         
         for (let i = 0; i < word.length * 25; i++) {
@@ -575,8 +594,9 @@ class CollectiveCanvas {
     }
 
     createPaintSplash(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 120; // Margin for paint splash drops
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const drops = [];
         
         for (let i = 0; i < word.length * 12; i++) {
@@ -603,8 +623,9 @@ class CollectiveCanvas {
     }
 
     createLaserBeam(word, color) {
-        const startX = Math.random() * this.canvas.width;
-        const startY = Math.random() * this.canvas.height;
+        const margin = 50;
+        const startX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const startY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const angle = Math.random() * Math.PI * 2;
         const length = 300 + word.length * 20;
         const endX = startX + Math.cos(angle) * length;
@@ -625,8 +646,9 @@ class CollectiveCanvas {
     }
 
     createFractalTree(word, color) {
-        const startX = Math.random() * this.canvas.width;
-        const startY = Math.random() * this.canvas.height;
+        const margin = 100;
+        const startX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const startY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const branches = [];
         
         // Generate all branches recursively
@@ -668,8 +690,9 @@ class CollectiveCanvas {
     }
 
     createWaveRipple(word, color) {
-        const centerX = Math.random() * this.canvas.width;
-        const centerY = Math.random() * this.canvas.height;
+        const margin = 150; // Larger margin for wave ripples
+        const centerX = margin + Math.random() * (this.canvas.width - 2 * margin);
+        const centerY = margin + Math.random() * (this.canvas.height - 2 * margin);
         const rings = [];
         
         for (let ring = 0; ring < 5 + word.length; ring++) {
